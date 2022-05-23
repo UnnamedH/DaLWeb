@@ -21,12 +21,15 @@ let commonV = [];
 let commonR = [];
 let commonL = [];
 
+const socket = io("http://127.0.0.1:3000", {
+  withCredentials: true,
+});
+
 const gameDiv = document.getElementById("gameDiv");
 const pTurnText = document.getElementById("pTurnText");
 const p1text = document.getElementById("p1scoreText");
 const p2text = document.getElementById("p2scoreText");
 
-let player = 1;
 let playerColor = "red";
 let playerDarkColor = "darkred";
 
@@ -38,6 +41,58 @@ let playerDarkColor = "darkred";
 // IF BOTH GIVE DIFFERENT ANSWERS THEN THE ANSWER IS
 // #1 + (#2 - #1) / 2
 
+socket.on("test", handleTest);
+socket.on("update", handleUpdate);
+
+function handleTest() {
+  console.log("tested");
+}
+
+function handleUpdate(board, player, space) {
+  console.log(board);
+
+  if (player == 1) {
+    pTurnText.innerHTML = "P1";
+    pTurnText.style.color = "red";
+  } else if (player == 2) {
+    pTurnText.innerHTML = "P2";
+    pTurnText.style.color = "blue";
+  }
+
+  for (let index = 1; index < board.length + 1; index++) {
+    let ch = board.charAt(index - 1);
+
+    if (ch == "X") {
+      btn = document.getElementById("btn" + index);
+      btn.style.background = "gray";
+    } else if (ch == "R") {
+      btn = document.getElementById("btn" + index);
+      btn.style.background = "red";
+    } else if (ch == "B") {
+      btn = document.getElementById("btn" + index);
+      btn.style.background = "blue";
+    }
+  }
+
+  for (let index = 1; index < space.length + 1; index++) {
+    let spc;
+    let ch = space.charAt(index - 1);
+
+    if (ch == "X") {
+      spc = document.getElementById("spc" + index);
+      spc.style.background = "rgb(64, 64, 64)";
+    } else if (ch == "R") {
+      spc = document.getElementById("spc" + index);
+      spc.style.background = "darkred";
+      spc.innerHTML = "P1";
+    } else if (ch == "B") {
+      spc = document.getElementById("spc" + index);
+      spc.style.background = "darkblue";
+      spc.innerHTML = "P2";
+    }
+  }
+}
+
 getBtnNums();
 function getBtnNums() {
   let U1 = 2 * (R * C + (C - 1));
@@ -47,8 +102,6 @@ function getBtnNums() {
   else if (U1 != U2) {
     numofbtns = U1 + (U2 - U1) / 2;
   }
-
-  // console.log(numofbtns);
 }
 
 for (let h = 0; h < R; h++) {
@@ -57,45 +110,8 @@ for (let h = 0; h < R; h++) {
 CreateEndRow();
 
 function clicked(sender) {
-  // console.log(getY(52));
-
-  // console.log(sender);
-  let btn = document.getElementById(sender);
-  if (enabledBtns.includes(btn)) return;
-
-  enabledBtns.push(btn);
-  // console.log(btn.offsetWidth);
-
-  // console.log(enabledBtns);
-  CheckH(btn);
-  CheckV(btn);
-
-  Calculate();
-
-  if (player == 1) {
-    btn.style.background = "red";
-    if (!playerOverride) {
-      pTurnText.innerHTML = "P2";
-      pTurnText.style.color = "blue";
-      player = 2;
-      playerColor = "blue";
-      playerDarkColor = "darkblue";
-    }
-  } else if (player == 2) {
-    btn.style.background = "blue";
-    if (!playerOverride) {
-      pTurnText.innerHTML = "P1";
-      pTurnText.style.color = "red";
-      player = 1;
-      playerColor = "red";
-      playerDarkColor = "darkred";
-    }
-  }
-  playerOverride = false;
-
-  UpdateScoreBoard();
-
-  setTimeout(CheckScores, 1000);
+  console.log(numofbtns);
+  socket.emit("clicked", sender);
 }
 
 function CheckScores() {
