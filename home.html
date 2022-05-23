@@ -7,16 +7,37 @@
     <meta property="og:description" content="DaL online made by hrant" />
     <title>Multiplayer DaL</title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+      #gameScreen {
+        display: none;
+      }
+    </style>
   </head>
   <body id="overview">
-    <div class="motherDiv">
-      <div class="playerDiv divs">
-        <h1 id="pTurnText" style="color: red">P1</h1>
+    <div id="welcomeScreen">
+      <h1 id="welcomeText">Welcome to Multiplayer DaL!</h1>
+      <button type="submit" class="menuBtn" id="createGameBtn">Create Game</button>
+      <div>OR</div>
+      <div>
+        <input type="text" class="menuBtn" placeholder="Enter Game Code Here" id="gameCodeText" />
+        <button type="submit" class="menuBtn" id="joinGameBtn">Join Game</button>
       </div>
-      <div class="emptyDiv"></div>
-      <div class="scoreDiv divs">
-        <h3 id="p1scoreText" class="text" style="color: red">P1:0</h3>
-        <h3 id="p2scoreText" class="text" style="color: blue">P2:0</hh3>
+      <pre></pre>
+      <div id="connectionDiv">Disconnected</div>
+      <div id="waitDiv">(Might have to wait a few seconds for the server to boot up)</div>
+    </div>
+    <div id="gameScreen">
+      <div id="motherDiv">
+        <div class="playerDiv divs">
+          <h1 id="pTurnText" class="text" style="color: red">P1</h1>
+        </div>
+        <div class="emptyDiv"></div>
+        <div class="scoreDiv divs">
+          <h3 id="p1scoreText" class="text" style="color: red">P1:0</h3>
+          <h3 id="p2scoreText" class="text" style="color: blue">P2:0</hh3>
+        </div>
+      </div>
+      <div id="gameDiv">
       </div>
     </div>
     <script src="script.js"></script>

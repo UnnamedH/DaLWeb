@@ -21,7 +21,7 @@ let commonV = [];
 let commonR = [];
 let commonL = [];
 
-const body = document.getElementById("overview");
+const gameDiv = document.getElementById("gameDiv");
 const pTurnText = document.getElementById("pTurnText");
 const p1text = document.getElementById("p1scoreText");
 const p2text = document.getElementById("p2scoreText");
@@ -415,7 +415,7 @@ function CreateElements() {
 
       div.appendChild(btn);
     }
-    body.appendChild(div);
+    gameDiv.appendChild(div);
     hor = false;
   }
   if (!hor) {
@@ -456,7 +456,7 @@ function CreateElements() {
         div.appendChild(newDiv);
       }
     }
-    body.appendChild(div);
+    gameDiv.appendChild(div);
     hor = true;
   }
 }
@@ -488,5 +488,5 @@ function CreateEndRow() {
     });
     div.appendChild(btn);
   }
-  body.appendChild(div);
+  gameDiv.appendChild(div);
 }

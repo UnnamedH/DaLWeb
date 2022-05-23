@@ -35,10 +35,50 @@ footer {
   width: 100%;
 }
 
+#welcomeText {
+  margin: 3rem;
+}
+
+.menuBtn {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background-color: gray;
+  border: none;
+  border-radius: .2rem;
+  padding: .3rem;
+}
+
+.menuBtn:hover {
+  background-color: darkgray;
+}
+
+#connectionDiv, #waitDiv {
+  display: flex;
+  margin-top: 2rem;
+  align-self: center;
+  position: absolute;
+}
+
+#connectionDiv {
+  bottom: 50;
+}
+
+#waitDiv {
+  bottom: 30;
+}
+
+#welcomeScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 body {
   flex-grow: 1;
   display: flex;
   justify-content: left;
+  flex-wrap: wrap;
   flex-direction: column;
   background: rgb(64, 64, 64);
   max-width: 100%;
@@ -49,9 +89,14 @@ body {
   /* margin-bottom: .8rem; */
 }
 
-.motherDiv {
+#motherDiv {
   display: flex;
   flex-direction: row;
+}
+
+#gameDiv {
+  display: flex;
+  flex-direction: column;
 }
 
 .divs {
@@ -88,6 +133,7 @@ body {
 
 .text {
   margin: .4rem;
+  text-shadow: 0 0 1px white, 0 0 1px white, 0 0 1px white, 0 0 1px white;
 }
 
 .c1 {
