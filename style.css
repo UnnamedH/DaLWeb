@@ -1,0 +1,142 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+html {
+  background: black;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: white;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+:root {
+  --HHeight: 1rem;
+  --HWidth: 4rem;
+  --VHeight: 4rem;
+  --VWidth: 1rem;
+
+  --HMargin: var(--VWidth);
+  --VMargin: var(--HWidth);
+}
+
+footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+body {
+  flex-grow: 1;
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  background: rgb(64, 64, 64);
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#pTurnText {
+  /* margin-bottom: .8rem; */
+}
+
+.motherDiv {
+  display: flex;
+  flex-direction: row;
+}
+
+.divs {
+  display: flex;
+}
+
+.emptyDiv {
+  flex-grow: 0.6;
+}
+
+.scoreDiv {
+  justify-content: center;
+  align-self: center;
+}
+
+.playerDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  flex-grow: 0.3;
+  position: relative;
+  flex-direction: row;
+}
+
+.spc {
+  margin: 0;
+  padding: 0;
+  color: white;
+  font-size: 1.1rem;
+  background: rgb(64, 64, 64);
+}
+
+.text {
+  margin: .4rem;
+}
+
+.c1 {
+  margin-top: 1rem;
+  position: relative;
+}
+
+.container {
+  font-size: 0;
+  display: flex;
+  margin: auto;
+  justify-content: center;
+}
+
+.btn {
+  background: gray;
+  border: none;
+}
+
+.btn:hover {
+  background:darkgray;
+}
+
+.btn-hor {
+  width: var(--HWidth);
+  height: var(--HHeight);
+  margin: 0;
+}
+
+.btn-ver {
+  width: var(--VWidth);
+  height: var(--VHeight);
+  margin: 0;
+}
+
+
+.btn-hor.btn-left {
+  margin-right: var(--HMargin);
+}
+
+.btn-hor.btn-right {
+  margin-left: var(--HMargin);
+}
+
+.btn-hor.btn-mid.btn-right {
+  margin-left: calc(var(--HMargin) / 2);
+}
+
+.btn-hor.btn-mid.btn-left {
+  margin-right: calc(var(--HMargin) / 2);
+}
+
