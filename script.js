@@ -5,93 +5,27 @@ let hor = true;
 let count = 0;
 let playerOverride = false;
 
-let p1score = 0;
-let p2score = 0;
-
 const R = 5;
 const C = 7;
 const Rp = R + 1;
 const Cp = C + 1;
-let numofbtns;
-let enabledBtns = [];
-let commonH = [];
-let commonU = [];
-let commonD = [];
-let commonV = [];
-let commonR = [];
-let commonL = [];
+let room;
+let playerNumber;
 
 const socket = io("http://127.0.0.1:3000", {
   withCredentials: true,
 });
 
-const gameDiv = document.getElementById("gameDiv");
+const gameScreen = document.getElementById("gameScreen");
+const welcomeScreen = document.getElementById("welcomeScreen");
+const codeText = document.getElementById("codeText");
 const pTurnText = document.getElementById("pTurnText");
 const p1text = document.getElementById("p1scoreText");
 const p2text = document.getElementById("p2scoreText");
+const codeInput = document.getElementById("codeInput");
 
 let playerColor = "red";
 let playerDarkColor = "darkred";
-
-// FORMULA
-// 2 (R * C + (C - 1))
-// OR
-// 2 (R' * C' - C) // Where R' = R + 1 and C' = C + 1
-// IF BOTH GIVE THE SAME ANSWER THEN THE ANSWER IS CORRECT
-// IF BOTH GIVE DIFFERENT ANSWERS THEN THE ANSWER IS
-// #1 + (#2 - #1) / 2
-
-socket.on("test", handleTest);
-socket.on("update", handleUpdate);
-
-function handleTest() {
-  console.log("tested");
-}
-
-function handleUpdate(board, player, space) {
-  console.log(board);
-
-  if (player == 1) {
-    pTurnText.innerHTML = "P1";
-    pTurnText.style.color = "red";
-  } else if (player == 2) {
-    pTurnText.innerHTML = "P2";
-    pTurnText.style.color = "blue";
-  }
-
-  for (let index = 1; index < board.length + 1; index++) {
-    let ch = board.charAt(index - 1);
-
-    if (ch == "X") {
-      btn = document.getElementById("btn" + index);
-      btn.style.background = "gray";
-    } else if (ch == "R") {
-      btn = document.getElementById("btn" + index);
-      btn.style.background = "red";
-    } else if (ch == "B") {
-      btn = document.getElementById("btn" + index);
-      btn.style.background = "blue";
-    }
-  }
-
-  for (let index = 1; index < space.length + 1; index++) {
-    let spc;
-    let ch = space.charAt(index - 1);
-
-    if (ch == "X") {
-      spc = document.getElementById("spc" + index);
-      spc.style.background = "rgb(64, 64, 64)";
-    } else if (ch == "R") {
-      spc = document.getElementById("spc" + index);
-      spc.style.background = "darkred";
-      spc.innerHTML = "P1";
-    } else if (ch == "B") {
-      spc = document.getElementById("spc" + index);
-      spc.style.background = "darkblue";
-      spc.innerHTML = "P2";
-    }
-  }
-}
 
 getBtnNums();
 function getBtnNums() {
@@ -109,292 +43,100 @@ for (let h = 0; h < R; h++) {
 }
 CreateEndRow();
 
+// FORMULA
+// 2 (R * C + (C - 1))
+// OR
+// 2 (R' * C' - C) // Where R' = R + 1 and C' = C + 1
+// IF BOTH GIVE THE SAME ANSWER THEN THE ANSWER IS CORRECT
+// IF BOTH GIVE DIFFERENT ANSWERS THEN THE ANSWER IS
+// #1 + (#2 - #1) / 2
+
+socket.on("test", handleTest);
+socket.on("update", handleUpdate);
+socket.on("gameCode", handleGameCode);
+socket.on("init", handleInit);
+
+function init() {
+  welcomeScreen.style.display = "none";
+  gameScreen.style.display = "block";
+
+  codeText.innerHTML = `The Code is: ${room}`;
+}
+
+function handleInit(number, p) {
+  playerNumber = number;
+  init();
+}
+
+function handleTest() {
+  console.log("tested");
+}
+
+function handleGameCode(gameCode) {
+  room = gameCode;
+}
+
+function handleUpdate(state) {
+  console.log(state.board);
+
+  p1text.innerHTML = `P1: ${state.p1score}`;
+  p2text.innerHTML = `P2: ${state.p2score}`;
+
+  if (state.player == 1) {
+    pTurnText.innerHTML = "P1";
+    pTurnText.style.color = "red";
+  } else if (state.player == 2) {
+    pTurnText.innerHTML = "P2";
+    pTurnText.style.color = "blue";
+  }
+
+  for (let index = 1; index < state.board.length + 1; index++) {
+    let ch = state.board.charAt(index - 1);
+
+    if (ch == "X") {
+      btn = document.getElementById("btn" + index);
+      btn.style.background = "gray";
+    } else if (ch == "R") {
+      btn = document.getElementById("btn" + index);
+      btn.style.background = "red";
+    } else if (ch == "B") {
+      btn = document.getElementById("btn" + index);
+      btn.style.background = "blue";
+    }
+  }
+
+  for (let index = 1; index < state.space.length + 1; index++) {
+    let spc;
+    let ch = state.space.charAt(index - 1);
+
+    if (ch == "X") {
+      spc = document.getElementById("spc" + index);
+      spc.style.background = "rgb(64, 64, 64)";
+    } else if (ch == "R") {
+      spc = document.getElementById("spc" + index);
+      spc.style.background = "darkred";
+      spc.innerHTML = "P1";
+    } else if (ch == "B") {
+      spc = document.getElementById("spc" + index);
+      spc.style.background = "darkblue";
+      spc.innerHTML = "P2";
+    }
+  }
+}
+
+function menuClicked(sender) {
+  console.log(sender);
+  if (sender == "createGameBtn") {
+    socket.emit("newGame");
+  } else if (sender == "joinGameBtn") {
+    socket.emit("joinGame", codeInput.value);
+  }
+}
+
 function clicked(sender) {
-  console.log(numofbtns);
-  socket.emit("clicked", sender);
-}
+  let btn = document.getElementById(sender);
 
-function CheckScores() {
-  if (p1score + p2score == C * R) {
-    if (p1score > p2score) {
-      alert("Game Over, Player 1 wins!");
-    } else if (p2score > p1score) {
-      alert("Game Over, Player 2 wins!");
-    }
-  }
-}
-
-function Calculate() {
-  let spc;
-  let y;
-  let x;
-  let trueid;
-  let res;
-
-  if (commonU.length == 4) {
-    res = getLeast("U");
-    y = getY(res);
-    x = res % 15;
-
-    trueid = x + 7 * y;
-
-    spc = document.getElementById(`spc${trueid}`);
-
-    spc.style.background = playerDarkColor;
-    spc.className = "spc";
-
-    console.log("U");
-    playerOverride = true;
-
-    AddScore(spc);
-  }
-  if (commonD.length == 4) {
-    res = getLeast("D");
-    y = getY(res);
-    x = res % 15;
-
-    trueid = x + 7 * y;
-
-    spc = document.getElementById(`spc${trueid}`);
-
-    spc.style.background = playerDarkColor;
-    spc.className = "spc";
-
-    console.log("D");
-    playerOverride = true;
-
-    AddScore(spc);
-  }
-  if (commonR.length == 4) {
-    res = getLeast("R");
-    y = getY(res);
-    x = res % 15;
-
-    trueid = x + 7 * y;
-
-    spc = document.getElementById(`spc${trueid}`);
-
-    spc.style.background = playerDarkColor;
-    spc.className = "spc";
-
-    console.log("R");
-    playerOverride = true;
-
-    AddScore(spc);
-  }
-  if (commonL.length == 4) {
-    res = getLeast("L");
-    y = getY(res);
-    x = res % 15;
-
-    trueid = x + 7 * y;
-
-    spc = document.getElementById(`spc${trueid}`);
-
-    spc.style.background = playerDarkColor;
-    spc.className = "spc";
-
-    console.log("L");
-    playerOverride = true;
-
-    AddScore(spc);
-  }
-
-  console.log(`X:${x} Y:${y}`);
-  console.log(spc);
-  console.log(trueid);
-  console.log(res);
-}
-
-function CheckH(btn) {
-  commonH = [];
-  commonU = [];
-  commonD = [];
-
-  let btnID = btn.id;
-  if (btnID.length == 4) {
-    btnID = btnID.substring(3, 4);
-  } else if (btnID.length == 5) {
-    btnID = btnID.substring(3, 5);
-  }
-
-  if (btn.offsetWidth != "64") return;
-
-  for (let x = 0; x < enabledBtns.length; x++) {
-    let button = enabledBtns[x];
-    let buttonID = button.id;
-    if (buttonID.length == 4) {
-      buttonID = buttonID.substring(3, 4);
-    } else if (buttonID.length == 5) {
-      buttonID = buttonID.substring(3, 5);
-    }
-
-    if (button == btn) {
-      commonD.push(button);
-      commonU.push(button);
-    }
-
-    let diff = buttonID - btnID;
-
-    // console.log(diff);
-
-    if (diff == 7 || diff == 8 || diff == 15) {
-      commonD.push(button);
-    } else if (diff == -7 || diff == -8 || diff == -15) {
-      commonU.push(button);
-    }
-  }
-
-  // console.log("Down");
-  for (let i = 0; i < commonD.length; i++) {
-    // console.log(commonD[i].id);
-  }
-  // console.log("Up");
-  for (let i = 0; i < commonU.length; i++) {
-    // console.log(commonU[i].id);
-  }
-}
-
-function CheckV(btn) {
-  commonV = [];
-  commonR = [];
-  commonL = [];
-
-  let btnID = btn.id;
-  if (btnID.length == 4) {
-    btnID = btnID.substring(3, 4);
-  } else if (btnID.length == 5) {
-    btnID = btnID.substring(3, 5);
-  }
-
-  if (btn.offsetWidth != "16") return;
-
-  for (let y = 0; y < enabledBtns.length; y++) {
-    let button = enabledBtns[y];
-    let buttonID = button.id;
-    if (buttonID.length == 4) {
-      buttonID = buttonID.substring(3, 4);
-    } else if (buttonID.length == 5) {
-      buttonID = buttonID.substring(3, 5);
-    }
-
-    if (button == btn) {
-      commonR.push(button);
-      commonL.push(button);
-    }
-
-    let diff = buttonID - btnID;
-
-    // console.log(diff);
-
-    if ((diff == -7 || diff == 1 || diff == 8) && btnID % 15 != 0) {
-      commonR.push(button);
-    } else if ((diff == -8 || diff == -1 || diff == 7) && btnID % 15 != 8) {
-      commonL.push(button);
-    }
-  }
-
-  // console.log("Right");
-  for (let i = 0; i < commonR.length; i++) {
-    // console.log(commonR[i].id);
-  }
-  // console.log("Left");
-  for (let i = 0; i < commonL.length; i++) {
-    // console.log(commonL[i].id);
-  }
-}
-
-function AddScore(spc) {
-  if (player == 1) {
-    spc.innerHTML = "P1";
-    p1score++;
-  } else if (player == 2) {
-    spc.innerHTML = "P2";
-    p2score++;
-  }
-}
-
-function getY(id) {
-  for (let i = 0; i < R; i++) {
-    if (id <= C + 15 * i) return i;
-  }
-}
-
-function getLeast(list) {
-  let result = 999;
-
-  if (list == "U") {
-    commonU.forEach((buton) => {
-      let btnID = buton.id;
-
-      if (btnID.length == 4) {
-        btnID = btnID.substring(3, 4);
-      } else if (btnID.length == 5) {
-        btnID = btnID.substring(3, 5);
-      }
-
-      if (+btnID < result) {
-        result = btnID;
-      }
-    });
-
-    return result;
-  }
-  if (list == "D") {
-    commonD.forEach((buton) => {
-      let btnID = buton.id;
-
-      if (btnID.length == 4) {
-        btnID = btnID.substring(3, 4);
-      } else if (btnID.length == 5) {
-        btnID = btnID.substring(3, 5);
-      }
-
-      console.log(btnID);
-      console.log(result);
-
-      if (+btnID < result) {
-        result = btnID;
-      }
-    });
-
-    console.log(result);
-    return result;
-  }
-  if (list == "R") {
-    commonR.forEach((buton) => {
-      let btnID = buton.id;
-
-      if (btnID.length == 4) {
-        btnID = btnID.substring(3, 4);
-      } else if (btnID.length == 5) {
-        btnID = btnID.substring(3, 5);
-      }
-
-      if (+btnID < result) {
-        result = btnID;
-      }
-    });
-
-    return result;
-  }
-  if (list == "L") {
-    commonL.forEach((buton) => {
-      let btnID = buton.id;
-
-      if (btnID.length == 4) {
-        btnID = btnID.substring(3, 4);
-      } else if (btnID.length == 5) {
-        btnID = btnID.substring(3, 5);
-      }
-
-      if (+btnID < result) {
-        result = btnID;
-      }
-    });
-
-    return result;
-  }
+  if (btn.style.background != "red" && btn.style.background != "blue") socket.emit("clicked", sender, room, playerNumber);
 }
 
 function UpdateScoreBoard() {
@@ -429,6 +171,13 @@ function CreateElements() {
         clicked(btn.id);
       });
 
+      btn.addEventListener("mouseover", function () {
+        if (btn.style.background == "gray") btn.style.backgroundColor = "darkgray";
+      });
+      btn.addEventListener("mouseout", function () {
+        if (btn.style.background == "darkgray") btn.style.backgroundColor = "gray";
+      });
+
       div.appendChild(btn);
     }
     gameDiv.appendChild(div);
@@ -456,6 +205,13 @@ function CreateElements() {
       }
       btn.addEventListener("click", function () {
         clicked(btn.id);
+      });
+
+      btn.addEventListener("mouseover", function () {
+        if (btn.style.background == "gray") btn.style.backgroundColor = "darkgray";
+      });
+      btn.addEventListener("mouseout", function () {
+        if (btn.style.background == "darkgray") btn.style.backgroundColor = "gray";
       });
 
       div.appendChild(btn);

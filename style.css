@@ -25,14 +25,21 @@ html {
   --VMargin: var(--HWidth);
 }
 
-footer {
+footer, #codeText {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   position: absolute;
-  bottom: 0;
   width: 100%;
+}
+
+footer {
+  bottom: 0;
+}
+
+#codeText {
+  bottom: 25;
 }
 
 #welcomeText {
