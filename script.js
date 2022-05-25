@@ -11,6 +11,7 @@ const Rp = R + 1;
 const Cp = C + 1;
 let room;
 let playerNumber;
+let enabled = false;
 
 const socket = io("http://127.0.0.1:3000", {
   withCredentials: true,
@@ -23,9 +24,12 @@ const pTurnText = document.getElementById("pTurnText");
 const p1text = document.getElementById("p1scoreText");
 const p2text = document.getElementById("p2scoreText");
 const codeInput = document.getElementById("codeInput");
+const connectioDiv = document.getElementById("connectioDiv");
+const waitDiv = document.getElementById("waitDiv");
+const youAreDiv = document.getElementById("youAreDiv");
 
-let playerColor = "red";
-let playerDarkColor = "darkred";
+let playerColor;
+let playerDarkColor;
 
 getBtnNums();
 function getBtnNums() {
@@ -55,21 +59,40 @@ socket.on("test", handleTest);
 socket.on("update", handleUpdate);
 socket.on("gameCode", handleGameCode);
 socket.on("init", handleInit);
+socket.on("start", handleStart);
+
+function handleStart() {
+  enabled = true;
+}
 
 function init() {
   welcomeScreen.style.display = "none";
   gameScreen.style.display = "block";
+  youAreDiv.innerHTML = `You are Player ${playerNumber} (${playerColor.toUpperCase()})`;
 
   codeText.innerHTML = `The Code is: ${room}`;
 }
 
 function handleInit(number, p) {
+  console.log("called");
   playerNumber = number;
+
+  if (playerNumber == 1) {
+    playerColor = "red";
+    playerDarkColor = "darkred";
+  }
+  if (playerNumber == 2) {
+    playerColor = "blue";
+    playerDarkColor = "darkblue";
+  }
+
   init();
 }
 
 function handleTest() {
   console.log("tested");
+  connectionDiv.innerHTML = "Connected";
+  waitDiv.style.display = "none";
 }
 
 function handleGameCode(gameCode) {
@@ -134,6 +157,8 @@ function menuClicked(sender) {
 }
 
 function clicked(sender) {
+  if (!enabled) return;
+
   let btn = document.getElementById(sender);
 
   if (btn.style.background != "red" && btn.style.background != "blue") socket.emit("clicked", sender, room, playerNumber);
