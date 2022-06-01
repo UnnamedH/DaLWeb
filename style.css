@@ -15,14 +15,27 @@ html {
   flex-direction: column;
 }
 
+/* Variables */
+
 :root {
   --HHeight: 1rem;
   --HWidth: 4rem;
   --VHeight: 4rem;
   --VWidth: 1rem;
-
+  
   --HMargin: var(--VWidth);
   --VMargin: var(--HWidth);
+}
+
+body {
+  flex-grow: 1;
+  display: flex;
+  justify-content: left;
+  flex-wrap: wrap;
+  flex-direction: column;
+  background: rgb(64, 64, 64);
+  max-width: 100%;
+  max-height: 100%;
 }
 
 footer, #codeText {
@@ -38,32 +51,18 @@ footer {
   bottom: 0;
 }
 
-#codeText {
-  bottom: 25;
-}
-
-#welcomeText {
-  margin: 3rem;
-}
-
-.menuBtn {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  background-color: gray;
-  border: none;
-  border-radius: .2rem;
-  padding: .3rem;
-}
-
-.menuBtn:hover {
-  background-color: darkgray;
-}
-
-#connectionDiv, #waitDiv {
+#welcomeScreen {
   display: flex;
-  margin-top: 2rem;
-  align-self: center;
-  position: absolute;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#endScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #connectionDiv {
@@ -74,28 +73,6 @@ footer {
   bottom: 30;
 }
 
-#welcomeScreen {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-body {
-  flex-grow: 1;
-  display: flex;
-  justify-content: left;
-  flex-wrap: wrap;
-  flex-direction: column;
-  background: rgb(64, 64, 64);
-  max-width: 100%;
-  max-height: 100%;
-}
-
-#pTurnText {
-  /* margin-bottom: .8rem; */
-}
-
 #motherDiv {
   display: flex;
   flex-direction: row;
@@ -104,6 +81,13 @@ body {
 #gameDiv {
   display: flex;
   flex-direction: column;
+}
+
+#connectionDiv, #waitDiv {
+  display: flex;
+  margin-top: 2rem;
+  align-self: center;
+  position: absolute;
 }
 
 .divs {
@@ -148,10 +132,20 @@ body {
   background: rgb(64, 64, 64);
 }
 
+#codeText {
+  bottom: 25;
+}
+
+#welcomeText, #winnerText {
+  margin: 3rem;
+}
+
+#winnerText {
+  margin-top: 10rem;
+}
+
 .text {
-  /* display: flex; */
   margin: .4rem;
-  /* flex-grow: 1; */
   text-shadow: 0 0 1px white, 0 0 1px white, 0 0 1px white, 0 0 1px white;
 }
 
@@ -165,6 +159,23 @@ body {
   display: flex;
   margin: auto;
   justify-content: center;
+}
+
+.menuBtn {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background-color: gray;
+  border: none;
+  border-radius: .2rem;
+  padding: .3rem;
+}
+
+.menuBtn:hover {
+  background-color: darkgray;
+}
+
+.endBtn {
+  margin: .3rem;
 }
 
 .btn {
@@ -187,7 +198,6 @@ body {
   height: var(--VHeight);
   margin: 0;
 }
-
 
 .btn-hor.btn-left {
   margin-right: var(--HMargin);

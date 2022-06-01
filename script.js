@@ -13,17 +13,33 @@ let room;
 let playerNumber;
 let enabled = false;
 
-const socket = io("http://127.0.0.1:3000", {
+for (let h = 0; h < R; h++) {
+  CreateElements();
+}
+CreateEndRow();
+
+// Offline
+// const socket = io("http://127.0.0.1:3000", {
+//   withCredentials: true,
+// });
+
+// Online
+const socket = io("https://dalwebserver.herokuapp.com", {
   withCredentials: true,
 });
 
 const gameScreen = document.getElementById("gameScreen");
 const welcomeScreen = document.getElementById("welcomeScreen");
+const endScreen = document.getElementById("endScreen");
+
 const codeText = document.getElementById("codeText");
 const pTurnText = document.getElementById("pTurnText");
 const p1text = document.getElementById("p1scoreText");
 const p2text = document.getElementById("p2scoreText");
+const winnerText = document.getElementById("winnerText");
+
 const codeInput = document.getElementById("codeInput");
+
 const connectioDiv = document.getElementById("connectioDiv");
 const waitDiv = document.getElementById("waitDiv");
 const youAreDiv = document.getElementById("youAreDiv");
@@ -31,38 +47,24 @@ const youAreDiv = document.getElementById("youAreDiv");
 let playerColor;
 let playerDarkColor;
 
-getBtnNums();
-function getBtnNums() {
-  let U1 = 2 * (R * C + (C - 1));
-  let U2 = 2 * (Rp * Cp - C);
-
-  if (U1 == U2) numofbtns = U1;
-  else if (U1 != U2) {
-    numofbtns = U1 + (U2 - U1) / 2;
-  }
-}
-
-for (let h = 0; h < R; h++) {
-  CreateElements();
-}
-CreateEndRow();
-
-// FORMULA
-// 2 (R * C + (C - 1))
-// OR
-// 2 (R' * C' - C) // Where R' = R + 1 and C' = C + 1
-// IF BOTH GIVE THE SAME ANSWER THEN THE ANSWER IS CORRECT
-// IF BOTH GIVE DIFFERENT ANSWERS THEN THE ANSWER IS
-// #1 + (#2 - #1) / 2
-
 socket.on("test", handleTest);
 socket.on("update", handleUpdate);
 socket.on("gameCode", handleGameCode);
 socket.on("init", handleInit);
 socket.on("start", handleStart);
+socket.on("gameEnded", handleGameEnded);
 
 function handleStart() {
   enabled = true;
+}
+
+function handleGameEnded(winner) {
+  // console.log("Game ended");
+
+  winnerText.innerHTML = `Player ${winner} wins!`;
+
+  gameScreen.style.display = "none";
+  endScreen.style.display = "flex";
 }
 
 function init() {
@@ -74,7 +76,7 @@ function init() {
 }
 
 function handleInit(number, p) {
-  console.log("called");
+  // console.log("called");
   playerNumber = number;
 
   if (playerNumber == 1) {
@@ -90,7 +92,7 @@ function handleInit(number, p) {
 }
 
 function handleTest() {
-  console.log("tested");
+  // console.log("tested");
   connectionDiv.innerHTML = "Connected";
   waitDiv.style.display = "none";
 }
@@ -100,7 +102,7 @@ function handleGameCode(gameCode) {
 }
 
 function handleUpdate(state) {
-  console.log(state.board);
+  // console.log(state.board);
 
   p1text.innerHTML = `P1: ${state.p1score}`;
   p2text.innerHTML = `P2: ${state.p2score}`;
@@ -148,7 +150,7 @@ function handleUpdate(state) {
 }
 
 function menuClicked(sender) {
-  console.log(sender);
+  // console.log(sender);
   if (sender == "createGameBtn") {
     socket.emit("newGame");
   } else if (sender == "joinGameBtn") {
@@ -159,7 +161,13 @@ function menuClicked(sender) {
 function clicked(sender) {
   if (!enabled) return;
 
-  let btn = document.getElementById(sender);
+  if (sender.length == 4) {
+    sender = sender.substring(3, 4);
+  } else if (sender.length == 5) {
+    sender = sender.substring(3, 5);
+  }
+
+  let btn = document.getElementById(`btn${sender}`);
 
   if (btn.style.background != "red" && btn.style.background != "blue") socket.emit("clicked", sender, room, playerNumber);
 }
