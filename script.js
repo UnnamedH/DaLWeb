@@ -19,7 +19,7 @@ for (let h = 0; h < R; h++) {
 CreateEndRow();
 
 // Offline
-// const socket = io("http://127.0.0.1:3000", {
+// const socket = io("http://192.168.2.22:3000", {
 //   withCredentials: true,
 // });
 
@@ -65,14 +65,18 @@ function handleGameEnded(winner) {
 
   gameScreen.style.display = "none";
   endScreen.style.display = "flex";
+
+  enabled = false;
 }
 
 function init() {
   welcomeScreen.style.display = "none";
+  endScreen.style.display = "none";
   gameScreen.style.display = "block";
   youAreDiv.innerHTML = `You are Player ${playerNumber} (${playerColor.toUpperCase()})`;
 
   codeText.innerHTML = `The Code is: ${room}`;
+  enabled = false;
 }
 
 function handleInit(number, p) {
@@ -155,11 +159,25 @@ function menuClicked(sender) {
     socket.emit("newGame");
   } else if (sender == "joinGameBtn") {
     socket.emit("joinGame", codeInput.value);
+  } else if (sender == "playAgainBtn") {
+    socket.emit("playAgain", room);
+    endScreen.style.display = "none";
+    gameScreen.style.display = "flex";
+    init();
+  } else if (sender == "leaveRoomBtn") {
+    socket.emit("leaveRoom", room);
+    endScreen.style.display = "none";
+    welcomeScreen.style.display = "flex";
   }
 }
 
 function clicked(sender) {
   if (!enabled) return;
+
+  if (+sender == 399) {
+    socket.emit("clicked", 399, room, playerNumber);
+    return;
+  }
 
   if (sender.length == 4) {
     sender = sender.substring(3, 4);

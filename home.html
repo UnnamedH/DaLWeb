@@ -39,7 +39,9 @@
         <div id="youAreDiv">
           You are Player 1 (Red)
         </div>
-        <div class="emptyDiv"></div>
+        <div class="emptyDiv">
+          <!-- <button id="399" onclick="clicked(id)"> winner</button> -->
+        </div>
         <div class="scoreDiv divs">
           <h3 id="p1scoreText" class="text" style="color: red">P1:0</h3>
           <h3 id="p2scoreText" class="text" style="color: blue">P2:0</hh3>
@@ -51,9 +53,10 @@
     </div>
     <div id="endScreen">
       <h1 id="winnerText">Game Over!</h1>
+      <h3 id="scoresText">P1:H<br>P2:H</h3>
       <div>
-        <button class="menuBtn endBtn" id="joinGameBtn" onclick="menuClicked(id)">Play Again</button>
-        <button class="menuBtn endBtn" id="joinGameBtn" onclick="menuClicked(id)">Leave Room</button>
+        <button class="menuBtn endBtn" id="playAgainBtn" onclick="menuClicked(id)">Play Again</button>
+        <button class="menuBtn endBtn" id="leaveRoomBtn" onclick="menuClicked(id)">Leave Room</button>
       </div>
     </div>
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>

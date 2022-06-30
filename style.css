@@ -142,6 +142,12 @@ footer {
 
 #winnerText {
   margin-top: 10rem;
+  margin-bottom: 2rem
+}
+
+#scoresText {
+  margin-top: 0rem;
+  margin-bottom: 1rem;
 }
 
 .text {
