@@ -12,6 +12,8 @@ const Cp = C + 1;
 let room;
 let playerNumber;
 let enabled = false;
+let p1score = 0;
+let p2score = 0;
 
 for (let h = 0; h < R; h++) {
   CreateElements();
@@ -19,30 +21,31 @@ for (let h = 0; h < R; h++) {
 CreateEndRow();
 
 // Offline
-// const socket = io("http://192.168.2.22:3000", {
-//   withCredentials: true,
-// });
-
-// Online
-const socket = io("https://dalwebserver.herokuapp.com", {
+const socket = io("http://127.0.0.1:3000", {
   withCredentials: true,
 });
 
-const gameScreen = document.getElementById("gameScreen");
-const welcomeScreen = document.getElementById("welcomeScreen");
-const endScreen = document.getElementById("endScreen");
+// Online
+// const socket = io("https://dalwebserver.herokuapp.com", {
+//   withCredentials: true,
+// });
 
-const codeText = document.getElementById("codeText");
-const pTurnText = document.getElementById("pTurnText");
-const p1text = document.getElementById("p1scoreText");
-const p2text = document.getElementById("p2scoreText");
-const winnerText = document.getElementById("winnerText");
+const gameScreen = document.getElementById("gameScreen"); //////// Game screen
+const welcomeScreen = document.getElementById("welcomeScreen"); // Welcome screen
+const endScreen = document.getElementById("endScreen"); ////////// End screen
 
-const codeInput = document.getElementById("codeInput");
+const codeText = document.getElementById("codeText"); //////////// Text where code is displayed
+const pTurnText = document.getElementById("pTurnText"); ////////// Text showing which player's turn
+const p1text = document.getElementById("p1scoreText"); /////////// Text P1's score
+const p2text = document.getElementById("p2scoreText"); /////////// Text P2's score
+const winnerText = document.getElementById("winnerText"); //////// Text for who won
+const scoresText = document.getElementById("scoresText"); //////// Text where wins are showed
 
-const connectioDiv = document.getElementById("connectioDiv");
-const waitDiv = document.getElementById("waitDiv");
-const youAreDiv = document.getElementById("youAreDiv");
+const codeInput = document.getElementById("codeInput"); ////////// Input the code
+
+const connectioDiv = document.getElementById("connectioDiv"); //// Div showing connection info
+const waitDiv = document.getElementById("waitDiv"); ////////////// Div showing wait message
+const youAreDiv = document.getElementById("youAreDiv"); ////////// Div showing which player u are
 
 let playerColor;
 let playerDarkColor;
@@ -65,6 +68,11 @@ function handleGameEnded(winner) {
 
   gameScreen.style.display = "none";
   endScreen.style.display = "flex";
+
+  if (winner == 1) p1score++;
+  else if (winner == 2) p2score++;
+
+  scoresText.innerHTML = `P1:${p1score}<br>P2:${p2score}`;
 
   enabled = false;
 }
@@ -308,6 +316,13 @@ function CreateEndRow() {
     }
     btn.addEventListener("click", function () {
       clicked(btn.id);
+    });
+
+    btn.addEventListener("mouseover", function () {
+      if (btn.style.background == "gray") btn.style.backgroundColor = "darkgray";
+    });
+    btn.addEventListener("mouseout", function () {
+      if (btn.style.background == "darkgray") btn.style.backgroundColor = "gray";
     });
     div.appendChild(btn);
   }
