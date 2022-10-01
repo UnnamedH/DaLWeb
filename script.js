@@ -21,14 +21,14 @@ for (let h = 0; h < R; h++) {
 CreateEndRow();
 
 // Offline
-const socket = io("http://127.0.0.1:3000", {
-  withCredentials: true,
-});
-
-// Online
-// const socket = io("https://dalwebserver.herokuapp.com", {
+// const socket = io("http://127.0.0.1:3000", {
 //   withCredentials: true,
 // });
+
+// Online
+const socket = io("https://dalwebserver.herokuapp.com", {
+  withCredentials: true,
+});
 
 const gameScreen = document.getElementById("gameScreen"); //////// Game screen
 const welcomeScreen = document.getElementById("welcomeScreen"); // Welcome screen
